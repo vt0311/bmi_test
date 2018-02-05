@@ -37,8 +37,17 @@ b = tf.Variable(tf.zeros([3])); # 바이어스 - 0으로 초기화됨. 이 변�
 # x가 입력, w가 가중치, b가 바이어스
 y = tf.nn.softmax(tf.matmul(x, W) + b)
 
-# 모델 훈련하기 --- (※8)
+# * 모델 훈련하기 --- (※8) : 데이터를 학습하는 모델을 훈련한다.
+# 데이터를 학습할 때는 오차 함수를 활용했다.
+# 오차 함수는 교차 엔트로피를 사용했다. 
+# 교차 엔트로피는 2개의 확률 분포 사이에 정의되는 척도인데,
+# 교차 엔트로피 값이 적을 수록 정확한 값을 낸다.
 cross_entropy = -tf.reduce_sum(y_ * tf.log(y))
+
+# 오차 함수가 최소가 되도록 학습하는 프로그램이다.
+# 0.01은 학습계수이다.
+# 경사하강법을 사용하였다.
+# 다음 두줄을 사용하면 TensorFlow가 가중치 w와 바이어스 b의 값을 자동으로 변경해줍니다.
 optimizer = tf.train.GradientDescentOptimizer(0.01)
 train = optimizer.minimize(cross_entropy)
 
