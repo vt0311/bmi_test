@@ -16,10 +16,10 @@ import xml.etree.ElementTree as ET
 import requests
 import pandas
 
-xml_path = os.path.join('download', 'full_database.zip')
+#xml_path = os.path.join('download', 'full_database.zip')
 #xml_path = os.path.join('download', 'drugbank_preview.xml.gz')
-#xml_path = os.path.join('download', 'drugbank.xml.gz')
-with zip.open(xml_path) as xml_file:
+xml_path = os.path.join('download', 'drugbank.xml.gz')
+with gzip.open(xml_path) as xml_file:
     tree = ET.parse(xml_file)
 root = tree.getroot()
 
