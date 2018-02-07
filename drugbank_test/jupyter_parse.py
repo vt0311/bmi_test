@@ -16,9 +16,10 @@ import xml.etree.ElementTree as ET
 import requests
 import pandas
 
-
-xml_path = os.path.join('download', 'drugbank.xml.gz')
-with gzip.open(xml_path) as xml_file:
+xml_path = os.path.join('download', 'full_database.zip')
+#xml_path = os.path.join('download', 'drugbank_preview.xml.gz')
+#xml_path = os.path.join('download', 'drugbank.xml.gz')
+with zip.open(xml_path) as xml_file:
     tree = ET.parse(xml_file)
 root = tree.getroot()
 
@@ -30,18 +31,41 @@ inchi_template = "{ns}calculated-properties/{ns}property[{ns}kind='InChI']/{ns}v
 rows = list()
 for i, drug in enumerate(root):
     row = collections.OrderedDict()
+    
     assert drug.tag == ns + 'drug'
+    
     row['type'] = drug.get('type')
+    
     row['drugbank_id'] = drug.findtext(ns + "drugbank-id[@primary='true']")
+    
     row['name'] = drug.findtext(ns + "name")
+    
     row['groups'] = [group.text for group in
         drug.findall("{ns}groups/{ns}group".format(ns = ns))]
+    
     row['atc_codes'] = [code.get('code') for code in
         drug.findall("{ns}atc-codes/{ns}atc-code".format(ns = ns))]
+    
     row['categories'] = [x.findtext(ns + 'category') for x in
         drug.findall("{ns}categories/{ns}category".format(ns = ns))]
+    
+    row['indication'] = [x.findtext(ns + 'indication') for x in
+        drug.findall("{ns}indication/{ns}indication".format(ns = ns))]
+    
+    row['description'] = [x.findtext(ns + 'description') for x in
+        drug.findall("{ns}description/{ns}description".format(ns = ns))]
+    
+    row['dosage-form'] = [x.findtext(ns + 'dosage-form') for x in
+        drug.findall("{ns}dosage-form/{ns}dosage-form".format(ns = ns))]
+    
+    row['route'] = [x.findtext(ns + 'route') for x in
+        drug.findall("{ns}route/{ns}route".format(ns = ns))]
+    
+    
+    
     row['inchi'] = drug.findtext(inchi_template.format(ns = ns))
     row['inchikey'] = drug.findtext(inchikey_template.format(ns = ns))
+    
     rows.append(row)
 
 
@@ -55,7 +79,7 @@ def collapse_list_values(row):
 rows = list(map(collapse_list_values, rows))
 
 
-columns = ['drugbank_id', 'name', 'type', 'groups', 'atc_codes', 'categories', 'inchikey', 'inchi']
+columns = ['drugbank_id', 'name', 'type', 'groups', 'atc_codes', 'categories', 'indication', 'description', 'dosage-form', 'route', 'inchikey', 'inchi']
 drugbank_df = pandas.DataFrame.from_dict(rows)[columns]
 drugbank_df.head()
 
@@ -69,8 +93,9 @@ drugbank_slim_df.head()
 
 
 # write drugbank tsv
-path = os.path.join('data', 'drugbank.tsv')
-drugbank_df.to_csv(path, sep='\t', index=False)
+path = os.path.join('data', 'drugbank.csv')
+drugbank_df.to_csv(path, sep=',', index=False)
+#drugbank_df.to_csv(path, sep='\t', index=False)
 
 # write slim drugbank tsv
 path = os.path.join('data', 'drugbank-slim.tsv')
@@ -106,27 +131,27 @@ text = io.TextIOWrapper(gzip.GzipFile(fileobj=response.raw))
 uniprot_df = pandas.read_table(text, engine='python')
 uniprot_df.rename(columns={'uniprot': 'uniprot_id', 'GeneID': 'entrez_gene_id'}, inplace=True)
 
-print('Read our uniprot')
+#print('Read our uniprot')
 
 
 # merge uniprot mapping with protein_df
 entrez_df = protein_df.merge(uniprot_df, how='inner')
 
-print('merge uniprot')
+#print('merge uniprot')
 
 
 columns = ['drugbank_id', 'category', 'uniprot_id', 'entrez_gene_id', 'organism',
            'known_action', 'actions', 'pubmed_ids']
 entrez_df = entrez_df[columns]
 
-print('to_csv')
+#print('to_csv')
 
 
 
 path = os.path.join('data', 'proteins.tsv')
 entrez_df.to_csv(path, sep='\t', index=False)
 
-print('over')
+print('end')
 
 
 

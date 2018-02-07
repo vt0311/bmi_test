@@ -62,6 +62,7 @@ def makeCSV(xml_path):
     df_tmp.to_csv('DrugBankData_final.csv', encoding='utf-8')
 
 
+# csv 를 읽는 함수?
 def readCSV(csv_path):
     drugCSV = pd.read_csv(csv_path, encoding='utf-8', names=['index', 'indication', 'atc'])
     

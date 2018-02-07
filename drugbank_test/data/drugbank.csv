@@ -1,0 +1,3 @@
+drugbank_id,name,type,groups,atc_codes,categories,indication,description,dosage-form,route,inchikey,inchi
+DB00001,Lepirudin,biotech,approved,B01AE02,Antithrombins|Fibrinolytic Agents,,,,,,
+DB00002,Cetuximab,biotech,approved,L01XC06,Antineoplastic Agents,,,,,,
