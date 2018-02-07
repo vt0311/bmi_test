@@ -49,6 +49,10 @@ for i, drug in enumerate(root):
     row['categories'] = [x.findtext(ns + 'category') for x in
         drug.findall("{ns}categories/{ns}category".format(ns = ns))]
     
+    row['product'] = [x.findtext(ns + 'product') for x in
+        drug.findall("{ns}product/{ns}product".format(ns = ns))]
+    
+    
     row['indication'] = [x.findtext(ns + 'indication') for x in
         drug.findall("{ns}indication/{ns}indication".format(ns = ns))]
     
@@ -79,7 +83,8 @@ def collapse_list_values(row):
 rows = list(map(collapse_list_values, rows))
 
 
-columns = ['drugbank_id', 'name', 'type', 'groups', 'atc_codes', 'categories', 'indication', 'description', 'dosage-form', 'route', 'inchikey', 'inchi']
+columns = ['drugbank_id', 'name', 'type', 'groups', 'atc_codes', 'categories', 'product', 'indication', 'description', 'dosage-form', 'route', 'inchikey', 'inchi']
+#columns = ['drugbank_id', 'name', 'type', 'groups', 'atc_codes', 'categories', 'product' 'indication', 'description', 'dosage-form', 'route', 'inchikey', 'inchi']
 drugbank_df = pandas.DataFrame.from_dict(rows)[columns]
 drugbank_df.head()
 

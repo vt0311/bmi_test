@@ -28,7 +28,7 @@ def makeCSV():
     texts = []
     target = []
     nameList = []
-    routeList =[]
+    routeList = []
     
     n = 0
     for onedrug in drug_inCategory:
