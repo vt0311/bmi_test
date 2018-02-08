@@ -1,7 +1,7 @@
 '''
 Created on 2018. 2. 5.
 
-@author: acorn
+@author: hsw
 '''
 
 import os
